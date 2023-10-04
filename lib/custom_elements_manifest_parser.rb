@@ -2,13 +2,18 @@
 
 require_relative "custom_elements_manifest_parser/version"
 require_relative "custom_elements_manifest_parser/nodes"
-require "set"
 
+# Top level parser
 module CustomElementsManifestParser
   # Shortuct for `CustomElementsManifestParser::Parser.new().parse()`
-  def self.parse(**kwargs)
-    hash = kwargs.transform_keys(&:to_sym)
-    Parser.new(**hash).parse
+  def self.parse(arg = nil, **kwargs)
+    hash = if arg.is_a?(Hash)
+             arg
+           else
+             kwargs
+           end
+
+    Parser.new(**hash.transform_keys(&:to_sym)).parse
   end
 
   # @return [Hash{"public", "private", "protected" => "public", "private", "protected"}]
@@ -20,12 +25,19 @@ module CustomElementsManifestParser
 
   # Top level interface that users will interact with when reading custom elements JSON.
   # @example
-  #   CustomElementsSchema::Parser.new(**JSON.parse("custom-elements.json"))
+  #   CustomElementsSchema::Parser.new(JSON.parse("custom-elements.json"))
   #
-  class Parser < Nodes::Package
+  class Parser
     attr_accessor :visitable_nodes
+    attr_accessor :manifest
 
-    def initialize(**kwargs)
+    def initialize(arg = nil, **kwargs)
+      hash = if arg.is_a?(Hash)
+               arg
+             else
+               kwargs
+             end
+
       @visitable_nodes = {}
       @visitable_nodes[Nodes::JavaScriptModule.kind] = Nodes::JavaScriptModule
       @visitable_nodes[Nodes::CustomElementField.kind] = Nodes::CustomElementField
@@ -41,18 +53,15 @@ module CustomElementsManifestParser
       ## This is equivalent to MixinDeclaration | CustomElementDeclaration | CustomElementMixinDeclaration;
       @visitable_nodes[Nodes::MixinDeclaration.kind] = Nodes::MixinDeclaration
 
-      hash = kwargs.transform_keys(&:to_sym)
-      super(**hash)
-    end
-
-    # Caches a version of tree. We can re-parse anytime by calling #parse directly.
-    def tree
-      @tree ||= parse
+      # @return [Nodes::Manifest]
+      @manifest = Nodes::Manifest.new(**hash.transform_keys(&:to_sym))
     end
 
     # Builds the fully parsed tree
+    # @return [Package]
     def parse
-      @tree = visit(parser: self)
+      manifest.visit(parser: self)
+      self
     end
 
     # def array_fields
@@ -73,24 +82,10 @@ module CustomElementsManifestParser
     #   ]
     # end
 
-    def find_by(&block)
-      ary = []
-
-      tree.modules.flatten.each do |node|
-        ary << node if block.call(node) == true
-      end
-
-      ary.to_set.to_a
-    end
-
     # Hash{String, symbol => unknown}
     def visit_node(node)
       kind = node["kind"] || node[:kind]
       @visitable_nodes[kind].new(**node.transform_keys(&:to_sym)).visit(parser: self)
     end
-
-    # def find_by_kind(kind)
-    #   modules
-    # end
   end
 end

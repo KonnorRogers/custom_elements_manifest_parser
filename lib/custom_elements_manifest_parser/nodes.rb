@@ -263,7 +263,7 @@ module CustomElementsManifestParser
     # @param name [String]
     # @param summary [String, nil] - A markdown summary suitable for display in a listing.
     # @param description [String, nil] - A markdown description of the field.
-    # @param type [Type, nil] - The type serializer IE: "Object", "String", etc.
+    # @param type [Type] - The type serializer IE: "Object", "String", etc.
     # @param default [String, nil]
     # @param deprecated [nil, Boolean, String] -
     #   Whether the property is deprecated.
@@ -284,7 +284,7 @@ module CustomElementsManifestParser
       @name = name
       @summary = summary
       @description = description
-      @type = type
+      @type = new Type(**type.transform_keys(&:to_sym))
       @default = default
       @deprecated = deprecated
       @readonly = readonly
@@ -322,7 +322,9 @@ module CustomElementsManifestParser
       @summary = summary
       @description = description
       @deprecated = deprecated
+
       @parameters = parameters
+      @parameters = @parameters.map { |parameter| Parameter.new(**parameter.transform_keys(&:to_sym)) } if @parameters
 
       # Workaround for "return" keyword.
       @return = hash[:return] || nil
@@ -566,10 +568,23 @@ module CustomElementsManifestParser
     end
   end
 
+  # DeclarableNode is a Node that has a parent JavaScript module.
+  module DeclarableNode
+    attr_accessor :parent_module
+
+    # @param parent_module [JavaScriptModule, nil] -
+    #   A convenience helper so you don't need to manually traverse the manifest and always go top -> bottom.
+    def initialize(parent_module: nil, **_kwargs)
+      @parent_module = parent_module
+    end
+  end
+
+
   # Documents a class property
   class ClassField
     include PropertyLike
     include ParseableNode
+    prepend DeclarableNode
 
     # @return ["field"]
     def self.kind; "field"; end
@@ -667,7 +682,7 @@ module CustomElementsManifestParser
     # @param rest [Boolean, nil] -
     #   Whether the parameter is a rest parameter. Only the last parameter may be a rest parameter.
     #   Undefined implies single parameter.
-    def initialize(optional: nil, rest: nil, **kwargs)
+    def initialize(optional: nil, rest: nil, **_kwargs)
       @optional = optional
       @rest = rest
     end
@@ -675,8 +690,8 @@ module CustomElementsManifestParser
 
   module Nodes
     # top level of a custom elements manifest.
-    class Package
-      attr_accessor :schemaVersion, :deprecated, :readme, :modules
+    class Manifest
+      attr_accessor :schemaVersion, :deprecated, :readme, :modules, :package
 
       # @param schemaVersion [String] - Version of the schema.
       # @param readme [String, nil] - The Markdown to use for the main readme of this package.
@@ -751,8 +766,9 @@ module CustomElementsManifestParser
     # ```
     class MixinDeclaration
       include ParseableNode
-      include FunctionLike
-      include CustomElementLike
+      prepend FunctionLike
+      prepend CustomElementLike
+      prepend DeclarableNode
 
       attr_accessor :kind
 
@@ -789,7 +805,6 @@ module CustomElementsManifestParser
         @reflects = reflects
       end
     end
-
 
     # A JavaScript module!
     class JavaScriptModule
@@ -842,8 +857,8 @@ module CustomElementsManifestParser
       end
 
       def visit(parser:)
-        @declarations = @declarations.map { |declaration| parser.visit_node(**declaration) } unless @declarations.nil?
-        @exports = @exports.map { |export| parser.visit_node(**export) } unless @exports.nil?
+        @declarations = @declarations.map { |declaration| parser.visit_node(**declaration, parent_module: self) } unless @declarations.nil?
+        @exports = @exports.map { |export| parser.visit_node(**export, parent_module: self) } unless @exports.nil?
         self
       end
     end
@@ -851,6 +866,7 @@ module CustomElementsManifestParser
     # A JavaScript export!
     class JavaScriptExport
       include ParseableNode
+      prepend DeclarableNode
 
       # @return ["js"]
       def self.kind; "js"; end
@@ -899,6 +915,7 @@ module CustomElementsManifestParser
     #
     class CustomElementExport
       include ParseableNode
+      prepend DeclarableNode
 
       attr_accessor :kind,
                     :name,
@@ -933,7 +950,8 @@ module CustomElementsManifestParser
     end
 
     class ClassMethod
-      include FunctionLike
+      prepend FunctionLike
+      prepend DeclarableNode
       include ParseableNode
 
       attr_accessor :kind,
@@ -974,7 +992,8 @@ module CustomElementsManifestParser
 
     # This is equivalent to CustomElementDeclaration.
     class ClassDeclaration
-      prepend ParseableNode
+      include ParseableNode
+      prepend DeclarableNode
       prepend CustomElementLike
 
       attr_accessor :kind
@@ -994,6 +1013,7 @@ module CustomElementsManifestParser
 
     class VariableDeclaration
       include ParseableNode
+      prepend DeclarableNode
       include PropertyLike
 
       attr_accessor :kind, :source
@@ -1016,7 +1036,8 @@ module CustomElementsManifestParser
 
     class FunctionDeclaration
       include ParseableNode
-      include FunctionLike
+      prepend DeclarableNode
+      prepend FunctionLike
 
       attr_accessor :kind, :source
 

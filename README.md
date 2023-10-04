@@ -1,8 +1,7 @@
 # CustomElementsManifestParser
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/custom_elements_manifest_parser`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+The CustomElementsManifestParser is intended to be a way to parse + interact with JSON
+generated from here: <https://github.com/open-wc/custom-elements-manifest>
 
 ## Installation
 
@@ -14,15 +13,57 @@ gem 'custom_elements_manifest_parser'
 
 And then execute:
 
-    $ bundle install
+```bash
+bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install custom_elements_manifest_parser
+```bash
+bundle add custom_elements_manifest_parser
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "json"
+
+custom_elements_manifest = JSON.parse(File.read("custom-elements.json"))
+parser = CustomElementsManifestParser.parse(custom_elements_manifest)
+
+# Traversing through.
+parser.manifest.modules.each do |mod|
+  mod.path # => The file path to the JavaScript module.
+
+  mod.exports.each do |export|
+    # do something with exports
+  end
+
+  mod.declarations.each do |declaration|
+    # do something with a declaration
+  end
+end
+
+## Convenience Helpers
+
+# Searches for the tagName of the custom elements
+parser.find_by_tag_name("light-pen", "light-preview") # => declarations
+parser.find_by_tag_name(["light-pen", "light-preview"]) # => declarations
+
+# Searches for any declarations with {"customElement": true}
+parser.find_custom_elements
+```
+
+## Extending
+
+Because the schema is really a JSON file you can dump anything into, there does need to be some
+room to extend.
+
+### Replacing the Manifest
+
+### Replacing the Parser
+
+### Adding / Removing "visitable_nodes"
 
 ## Development
 
