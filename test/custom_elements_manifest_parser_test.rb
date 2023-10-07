@@ -66,7 +66,9 @@ class CustomElementsManifestParserTest < Minitest::Test
   end
 
   def test_it_should_find_all_custom_elements
-    manifest = ::CustomElementsManifestParser.parse(@json).manifest
+    parser = ::CustomElementsManifestParser.parse(@json)
+
+    manifest = parser.manifest
 
     custom_elements = []
 
@@ -80,21 +82,25 @@ class CustomElementsManifestParserTest < Minitest::Test
 
     custom_elements.each do |dec|
       # Should be able to find the parent JS module.
-      assert dec.parent_module.instance_of? ::CustomElementsManifestParser::Nodes::JavaScriptModule
-      assert dec.parent_module.path.instance_of? String
+      assert dec.parent_module.instance_of?(::CustomElementsManifestParser::Nodes::JavaScriptModule)
+      assert dec.parent_module.path.instance_of?(String)
     end
+
+    # Using the shortcut
+    assert_equal parser.find_custom_elements.length, 3
   end
 
   def test_it_should_find_custom_elements_by_tag_name
     parser = ::CustomElementsManifestParser.parse(@json)
 
-    custom_elements = parser.find_custom_elements
-    assert_equal custom_elements.length, 3
+    custom_elements = parser.find_by_tag_names(["blah"])
+    assert custom_elements.instance_of?(Hash)
+    assert_equal custom_elements.keys.length, 0
 
-    custom_elements = parser.find_custom_elements(["blah"])
-    assert_equal custom_elements.length, 0
+    custom_elements = parser.find_by_tag_names(["light-preview"])
+    assert_equal custom_elements.keys.length, 1
 
-    custom_elements = parser.find_custom_elements(["light-preview"])
-    assert_equal custom_elements.length, 1
+    custom_elements = parser.find_by_tag_names("light-preview", "light-pen", "blah")
+    assert_equal custom_elements.keys.length, 2
   end
 end

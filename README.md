@@ -60,8 +60,11 @@ end
 ## Convenience Helpers
 
 # Searches for the tagName of the custom elements
-parser.find_custom_elements("light-pen", "light-preview").each { |declaration| declaration }
-parser.find_custom_elements(["light-pen", "light-preview"]).each { |declaration| declaration }
+hash = parser.find_by_tag_names("light-pen", "light-preview")
+hash = parser.find_by_tag_names(["light-pen", "light-preview"])
+
+hash["light-pen"] # => declaration
+hash["light-preview"] # => declaration
 
 # Searches for all custom elements regardless of tagName
 parser.find_custom_elements.each do |declaration|

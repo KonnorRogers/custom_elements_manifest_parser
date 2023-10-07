@@ -81,27 +81,42 @@ module CustomElementsManifestParser
     #   ]
     # end
 
-    # Hash{String, symbol => unknown}
     def visit_node(node)
       kind = node["kind"] || node[:kind]
       @visitable_nodes[kind].new(node).visit(parser: self)
     end
 
-    def find_custom_elements(tag_names = [])
+    # @return [Array<ClassDeclaration>] - Returns an array of {Nodes::ClassDeclaration}s that describe the customElement.
+    def find_custom_elements
       custom_elements = []
 
       manifest.modules.flatten.each do |mod|
         mod.declarations.flatten.each do |dec|
           next if dec.attributes[:customElement] != true
 
-          if tag_names.empty?
-            custom_elements << dec
-            next
-          end
+          custom_elements << dec
+        end
+      end
 
-          if tag_names.include?(dec.attributes[:tagName])
-            custom_elements << dec
-          end
+      custom_elements
+    end
+
+    # @param {Array<String>} tag_names - An array of tag names to parse through
+    # @return [Hash{String => Nodes::ClassDeclaration}] - Returns a hash keyed off of found tagNames
+    def find_by_tag_names(*tag_names)
+      custom_elements = {}
+
+      tag_names = tag_names.flatten
+
+      manifest.modules.flatten.each do |mod|
+        mod.declarations.flatten.each do |dec|
+          # Needs to be != true because == false fails nil checks.
+          next if dec.attributes[:customElement] != true
+
+          tag_name = dec.attributes[:tagName]
+          next if tag_names.include?(tag_name) == false
+
+          custom_elements[tag_name] = dec
         end
       end
 
