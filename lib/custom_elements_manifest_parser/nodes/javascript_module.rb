@@ -44,7 +44,7 @@ module CustomElementsManifestParser
       #    @return [String, nil, Boolean] -
       #       Whether the module is deprecated.
       #       If the value is a string, it's the reason for the deprecation.
-      attribute? :deprecated, Types::Strict::String.optional | Types::Strict::Bool.optional.meta(required: false)
+      attribute :deprecated, Types::Strict::String.optional | Types::Strict::Bool.optional.meta(required: false)
 
       def visit(parser:)
         hash = {}

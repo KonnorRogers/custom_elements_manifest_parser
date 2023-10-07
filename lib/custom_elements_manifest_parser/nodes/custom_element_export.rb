@@ -36,7 +36,7 @@ module CustomElementsManifestParser
       #  Whether the custom-element export is deprecated.
       #  For example, a future version will not register the custom element in this file.
       #  If the value is a string, it's the reason for the deprecation.
-      attribute? :deprecated, Types::Strict::Bool.optional | Types::Strict::String.optional.meta(required: false)
+      attribute :deprecated, Types::Strict::Bool.optional | Types::Strict::String.optional.meta(required: false)
 
       def visit(parser:)
         hash = {}
