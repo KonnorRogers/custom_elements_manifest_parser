@@ -8,7 +8,11 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a method attached to a class
     class ClassMethod < BaseStruct
+
+      # @!parse Structs::FunctionLikeStruct
       attributes_from Structs::FunctionLikeStruct
+
+      # @!parse Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 
       # @return ["method"]

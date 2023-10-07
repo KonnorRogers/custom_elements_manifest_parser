@@ -7,6 +7,7 @@ module CustomElementsManifestParser
   module Nodes
     # A JavaScript export!
     class JavaScriptExport < BaseStruct
+      # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 
       # @!attribute kind

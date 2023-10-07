@@ -7,9 +7,13 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a function
     class FunctionDeclaration < BaseStruct
+      # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
+
+      # @!parse include Structs::FunctionLikeStruct
       attributes_from Structs::FunctionLikeStruct
 
+      # @return ["function"]
       def self.kind; "function"; end
 
       # @!attribute kind

@@ -7,6 +7,7 @@ module CustomElementsManifestParser
   module DataTypes
     # Documents a parameter on a function
     class Parameter < BaseStruct
+      # @!parse include Structs::PropertyLikeStruct
       attributes_from Structs::PropertyLikeStruct
 
       # @!attribute optional

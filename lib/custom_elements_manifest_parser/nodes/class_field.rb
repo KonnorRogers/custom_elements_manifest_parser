@@ -27,7 +27,10 @@ module CustomElementsManifestParser
       #    @return [SourceReference, nil]
       attribute :source, Types::Nominal::Any.optional.meta(required: false)
 
+      # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
+
+      # @!parse include Structs::PropertyLikeStruct
       attributes_from Structs::PropertyLikeStruct
 
       def visit(parser:)

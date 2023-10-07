@@ -8,7 +8,10 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a variable
     class VariableDeclaration < BaseStruct
+      # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
+
+      # @!parse include Structs::PropertyLikeStruct
       attributes_from Structs::PropertyLikeStruct
 
       # @return ["variable"]

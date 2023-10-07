@@ -56,14 +56,14 @@ module CustomElementsManifestParser
     # }
     # ```
     class MixinDeclaration < BaseStruct
-      # attributes_from Structs::FunctionLikeStruct
+      # @!parse Structs::CustomElementLikeStruct
       attributes_from Structs::CustomElementLikeStruct
 
+      # @!parse Structs::FunctionLikeStruct
       Structs::FunctionLikeStruct.schema.each do |attr|
         names = Structs::CustomElementLikeStruct.schema.keys.map { |obj| obj.name }
 
         next if names.include?(attr.name)
-
 
         attribute attr.name, attr.type
       end
