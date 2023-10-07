@@ -68,6 +68,7 @@ module CustomElementsManifestParser
         attribute attr.name, attr.type
       end
 
+      # @!parse Structs::FunctionLikeStruct
       attributes_from Structs::DeclarableNodeStruct
 
       # @!attribute kind
