@@ -27,48 +27,31 @@ class CustomElementsManifestParserTest < Minitest::Test
     assert modules.length > 0
   end
 
-  # class CustomManifest < CustomElementsManifestParser::Nodes::Manifest
-  #   attr_accessor :package
-  #
-  #   def initialize(arg = nil, **kwargs)
-  #     hash = if arg.is_a?(Hash)
-  #              arg
-  #            else
-  #              kwargs
-  #            end
-  #
-  #     hash = hash.transform_keys(&:to_sym)
-  #     @package = hash[:package]
-  #     super(**hash)
-  #   end
-  # end
-  #
-  # class CustomEvent < CustomElementsManifestParser::Event
-  #   attr_accessor :eventName, :reactName
-  #
-  #   def initialize(type: nil, eventName:, reactName:, **kwargs)
-  #     super(type: type, **kwargs.transform_keys(&:to_sym))
-  #     @eventName = eventName
-  #     @reactName = reactName
-  #   end
-  # end
-  #
-  # def test_it_should_allow_a_custom_manifest_and_nodes
-  #   @json = JSON.parse(File.read(File.expand_path("./fixtures/shoelace-custom-elements-manifest.json", __dir__)))
-  #
-  #   # The parser creates a manifest, but never calls anything #visit to start the chain of parsing.
-  #   parser = ::CustomElementsManifestParser::Parser.new(@json)
-  #
-  #   # Replace current manifest with the new manifest.
-  #   parser.manifest = CustomManifest.new(@json)
-  #
-  #   parser.data_types[:event] = CustomEvent
-  #
-  #   # Nothing gets parsed until `.parse` is called.
-  #   parser.parse
-  #
-  #   refute_nil parser.package
-  # end
+  class CustomManifest < CustomElementsManifestParser::Nodes::Manifest
+    attribute :package, CustomElementsManifestParser::Types::Strict::Hash
+  end
+
+  class CustomEvent < CustomElementsManifestParser::DataTypes::Event
+    attribute :eventName, CustomElementsManifestParser::Types::Strict::String
+    attribute :reactName, CustomElementsManifestParser::Types::Strict::String
+  end
+
+  def test_it_should_allow_a_custom_manifest_and_nodes
+    @json = JSON.parse(File.read(File.expand_path("./fixtures/shoelace-custom-elements-manifest.json", __dir__)))
+
+    # The parser creates a manifest, but never calls anything #visit to start the chain of parsing.
+    parser = ::CustomElementsManifestParser::Parser.new(@json)
+
+    # Replace current manifest with the new manifest.
+    parser.manifest = CustomManifest.new(@json)
+
+    parser.data_types[:event] = CustomEvent
+
+    # Nothing gets parsed until `.parse` is called.
+    parser.parse
+
+    refute_nil parser.manifest.package
+  end
 
   def test_it_has_first_module_correct
     first_module = @json["modules"][0]
