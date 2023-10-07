@@ -102,5 +102,8 @@ class CustomElementsManifestParserTest < Minitest::Test
 
     custom_elements = parser.find_by_tag_names("light-preview", "light-pen", "blah")
     assert_equal custom_elements.keys.length, 2
+
+    custom_elements = parser.find_all_tag_names
+    assert_equal custom_elements.keys.length, 3
   end
 end

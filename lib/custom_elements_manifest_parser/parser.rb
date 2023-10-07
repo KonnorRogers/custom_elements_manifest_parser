@@ -122,5 +122,23 @@ module CustomElementsManifestParser
 
       custom_elements
     end
+
+    # @return [Hash{String => Nodes::ClassDeclaration}] - Returns a hash keyed off of found tagNames.
+    def find_all_tag_names
+      custom_elements = {}
+
+      manifest.modules.flatten.each do |mod|
+        mod.declarations.flatten.each do |dec|
+          # Needs to be != true because == false fails nil checks.
+          next if dec.attributes[:customElement] != true
+
+          tag_name = dec.attributes[:tagName]
+
+          custom_elements[tag_name] = dec if tag_name
+        end
+      end
+
+      custom_elements
+    end
   end
 end

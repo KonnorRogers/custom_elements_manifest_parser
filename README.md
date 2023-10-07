@@ -63,8 +63,12 @@ end
 hash = parser.find_by_tag_names("light-pen", "light-preview")
 hash = parser.find_by_tag_names(["light-pen", "light-preview"])
 
-hash["light-pen"] # => declaration
-hash["light-preview"] # => declaration
+hash["light-pen"] # => ClassDeclaration
+hash["light-preview"] # => ClassDeclaration
+
+# Finds every declaration with a "tagName"
+hash = parser.find_all_tag_names
+hash["light-preview"] # => ClassDeclaration
 
 # Searches for all custom elements regardless of tagName
 parser.find_custom_elements.each do |declaration|
