@@ -27,10 +27,8 @@ module CustomElementsManifestParser
     # A mixin should not have a superclass. If a mixins composes other mixins,
     # they should be listed in the `mixins` field.
     #
-    # See [this article]{@link https://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/}
+    # See <https://justinfagnani.com/2015/12/21/real-mixins-with-javascript-classes/>
     # for more information on the classmixin pattern in JavaScript.
-    #
-    # @example
     #
     # This JavaScript mixin declaration:
     # ```javascript
@@ -59,13 +57,17 @@ module CustomElementsManifestParser
     # ```
     class MixinDeclaration < BaseStruct
       # attributes_from Structs::FunctionLikeStruct
-      # Structs::FunctionLikeStruct.schema.each do |attr|
-      #   next if attr.name === "name"
-      #
-      #   attribute attr.name, attr.type
-      # end
-
       attributes_from Structs::CustomElementLikeStruct
+
+      Structs::FunctionLikeStruct.schema.each do |attr|
+        names = Structs::CustomElementLikeStruct.schema.keys.map { |obj| obj.name }
+
+        next if names.include?(attr.name)
+
+
+        attribute attr.name, attr.type
+      end
+
       attributes_from Structs::DeclarableNodeStruct
 
       # @!attribute kind
@@ -76,7 +78,6 @@ module CustomElementsManifestParser
       def self.kind; 'mixin'; end
 
       def visit(parser:)
-
         hash = {}
 
         hash = hash.merge(

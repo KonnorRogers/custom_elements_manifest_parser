@@ -11,13 +11,19 @@ module CustomElementsManifestParser
       # @return ["class"]
       def self.kind; 'class'; end
 
-      # @!attribute
+
+      # @!parse include Structs::DeclarableNodeStruct
+      attributes_from Structs::DeclarableNodeStruct
+
+      # @!parse include Structs::CustomElementLikeStruct
+      attributes_from Structs::CustomElementLikeStruct
+
+      # @!attribute kind
       #    @return ["class"]
       attribute :kind, Types.Value("class")
 
-      attributes_from Structs::DeclarableNodeStruct
-      attributes_from Structs::CustomElementLikeStruct
-
+      # @param parser [Parser] - Gets passed a parser
+      # @return [ClassDeclaration]
       def visit(parser:)
         hash = {}
 

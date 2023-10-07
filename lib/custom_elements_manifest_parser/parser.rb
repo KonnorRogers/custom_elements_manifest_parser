@@ -57,7 +57,7 @@ module CustomElementsManifestParser
     end
 
     # Builds the fully parsed tree
-    # @return [Package]
+    # @return [Parser]
     def parse
       @manifest = manifest.visit(parser: self)
       self
@@ -85,6 +85,27 @@ module CustomElementsManifestParser
     def visit_node(node)
       kind = node["kind"] || node[:kind]
       @visitable_nodes[kind].new(node).visit(parser: self)
+    end
+
+    def find_custom_elements(tag_names = [])
+      custom_elements = []
+
+      manifest.modules.flatten.each do |mod|
+        mod.declarations.flatten.each do |dec|
+          next if dec.attributes[:customElement] != true
+
+          if tag_names.empty?
+            custom_elements << dec
+            next
+          end
+
+          if tag_names.include?(dec.attributes[:tagName])
+            custom_elements << dec
+          end
+        end
+      end
+
+      custom_elements
     end
   end
 end

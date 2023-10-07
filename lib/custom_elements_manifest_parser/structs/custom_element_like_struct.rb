@@ -5,6 +5,7 @@ module CustomElementsManifestParser
   module Structs
     # The additional fields that a custom element adds to classes and mixins.
     class CustomElementLikeStruct < BaseStruct
+      # @!parse include Structs::ClassLikeStruct
       attributes_from ClassLikeStruct
 
       # @!attribute customElement

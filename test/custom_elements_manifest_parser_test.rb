@@ -84,4 +84,17 @@ class CustomElementsManifestParserTest < Minitest::Test
       assert dec.parent_module.path.instance_of? String
     end
   end
+
+  def test_it_should_find_custom_elements_by_tag_name
+    parser = ::CustomElementsManifestParser.parse(@json)
+
+    custom_elements = parser.find_custom_elements
+    assert_equal custom_elements.length, 3
+
+    custom_elements = parser.find_custom_elements(["blah"])
+    assert_equal custom_elements.length, 0
+
+    custom_elements = parser.find_custom_elements(["light-preview"])
+    assert_equal custom_elements.length, 1
+  end
 end
