@@ -16,8 +16,8 @@ module CustomElementsManifestParser
       attribute :kind, Types.Value("field")
 
       # @!attribute privacy
-      #    @return ["protected", "public", "private", nil]
-      attribute :static, Types.privacy.optional.meta(required: false)
+      #    @return [Boolean, nil]
+      attribute :static, Types::Strict::Bool.optional.meta(required: false)
 
       # @!attribute inheritedFrom
       #    @return [Reference, nil]
@@ -39,8 +39,8 @@ module CustomElementsManifestParser
         hash[:source] = parser.data_types[:source].new(source).visit(parser: parser) unless source.nil?
 
         hash = hash.merge(
-          Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: struct),
-          Structs::PropertyLikeStruct.build_hash(parser: parser, struct: struct)
+          Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: self),
+          Structs::PropertyLikeStruct.build_hash(parser: parser, struct: self)
         )
 
         new(hash)

@@ -120,4 +120,11 @@ class CustomElementsManifestParserTest < Minitest::Test
 
     assert tags["light-pen"].attributes[:attributes][0].instance_of?(::CustomElementsManifestParser::DataTypes::Attribute)
   end
+
+  def test_it_should_check_reflections_on_attributes
+    parser = ::CustomElementsManifestParser.parse(@json)
+    tags = parser.find_all_tag_names
+
+    assert tags["light-preview"].members.select { |member| member.attributes[:reflects] }[0].reflects
+  end
 end

@@ -44,8 +44,8 @@ module CustomElementsManifestParser
         hash[:source] = parser.data_types[:source].new(source).visit(parser: parser) unless source.nil?
 
         hash = hash.merge(
-          Structs::FunctionLikeStruct.build_hash(parser: parser, struct: struct),
-          Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: struct)
+          Structs::FunctionLikeStruct.build_hash(parser: parser, struct: self),
+          Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: self)
         )
 
         new(hash)

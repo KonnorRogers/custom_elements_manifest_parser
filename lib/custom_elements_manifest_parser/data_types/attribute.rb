@@ -47,7 +47,7 @@ module CustomElementsManifestParser
 
       def visit(parser:)
         hash = {}
-        hash[:inheritedFrom] = parser.data_types[:inheritedFrom].new(inheritedFrom).visit(parser: parser) unless inheritedFrom.nil?
+        hash[:inheritedFrom] = parser.data_types[:inherited_from].new(inheritedFrom).visit(parser: parser) unless inheritedFrom.nil?
         hash[:type] = parser.data_types[:type].new(type).visit(parser: parser) unless type.nil?
         hash[:resolveInitializer] = parser.data_types[:resolve_initializer].new(resolveInitializer).visit(parser: parser) unless resolveInitializer.nil?
         new(hash)

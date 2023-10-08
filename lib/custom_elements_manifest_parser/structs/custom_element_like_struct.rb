@@ -57,6 +57,7 @@ module CustomElementsManifestParser
         hash[:slots] = struct.slots.map { |slot| parser.data_types[:slot].new(slot).visit(parser: parser) } unless struct.slots.nil?
         hash[:events] = struct.events.map { |event| parser.data_types[:event].new(event).visit(parser: parser) } unless struct.events.nil?
 
+        hash = hash.merge(ClassLikeStruct.build_hash(parser: parser, struct: struct))
         hash
       end
     end

@@ -65,7 +65,7 @@ module CustomElementsManifestParser
       attribute :mixins, Types::Strict::Array.optional.meta(required: false)
 
       # @!attribute members
-      #   @return [Array<ClassField, ClassMethod>, nil]
+      #   @return [Array<Nodes::CustomElementField, Nodes::ClassMethod>, nil]
       attribute :members, Types::Strict::Array.optional.meta(required: false)
 
       # @!attribute source
@@ -80,9 +80,9 @@ module CustomElementsManifestParser
 
       def self.build_hash(parser:, struct:)
         hash = {}
-        hash[:superclass] = struct.parser.data_types[:superclass].new(superclass).visit(parser: parser) unless struct.superclass.nil?
+        hash[:superclass] = parser.data_types[:superclass].new(struct.superclass).visit(parser: parser) unless struct.superclass.nil?
         hash[:mixins] = struct.mixins.map { |mixin| parser.data_types[:mixin].new(mixin).visit(parser: parser) } unless struct.mixins.nil?
-        hash[:source] = struct.parser.data_types[:source].new(source).visit(parser: parser) unless struct.source.nil?
+        hash[:source] = parser.data_types[:source].new(struct.source).visit(parser: parser) unless struct.source.nil?
 
         hash[:members] = struct.members.map { |member| parser.visit_node(member) } unless struct.members.nil?
         hash

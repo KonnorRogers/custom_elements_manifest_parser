@@ -47,7 +47,7 @@ module CustomElementsManifestParser
         slot: DataTypes::Slot,
         type: DataTypes::Type,
         type_reference: DataTypes::TypeReference,
-        inheritedFrom: DataTypes::Reference,
+        inherited_from: DataTypes::Reference,
         resolve_initializer: DataTypes::ResolveInitializer,
         reference: DataTypes::Reference
       }

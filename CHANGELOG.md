@@ -1,5 +1,11 @@
 ## Unreleased
 
+## [0.2.3] - 10/08/2023
+
+- Fixed a bug where `ClassLikeStruct` was not getting properly serialized.
+- Fixed a bug with `static` types on members.
+- Fixed a bug with inconsistent naming of `inheritedFrom` on data_types.
+
 ## [0.2.2] - 10/08/2023
 
 - Fixed a bug where `ClassDeclaration` wasn't properly serializing it's data types.
