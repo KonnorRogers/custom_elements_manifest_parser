@@ -106,4 +106,18 @@ class CustomElementsManifestParserTest < Minitest::Test
     custom_elements = parser.find_all_tag_names
     assert_equal custom_elements.keys.length, 3
   end
+
+  def test_it_should_generate_slots
+    parser = ::CustomElementsManifestParser.parse(@json)
+    tags = parser.find_all_tag_names
+
+    assert tags["light-pen"].slots[0].instance_of?(::CustomElementsManifestParser::DataTypes::Slot)
+  end
+
+  def test_it_should_generate_attributes
+    parser = ::CustomElementsManifestParser.parse(@json)
+    tags = parser.find_all_tag_names
+
+    assert tags["light-pen"].attributes[:attributes][0].instance_of?(::CustomElementsManifestParser::DataTypes::Attribute)
+  end
 end

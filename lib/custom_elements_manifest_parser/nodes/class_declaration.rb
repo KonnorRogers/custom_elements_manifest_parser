@@ -29,7 +29,7 @@ module CustomElementsManifestParser
 
         hash = hash.merge(
           Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: self),
-          Structs::DeclarableNodeStruct.build_hash(parser: parser, struct: self)
+          Structs::CustomElementLikeStruct.build_hash(parser: parser, struct: self)
         )
 
         new(hash)
