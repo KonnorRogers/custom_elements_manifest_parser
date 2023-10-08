@@ -127,4 +127,11 @@ class CustomElementsManifestParserTest < Minitest::Test
 
     assert tags["light-preview"].members.select { |member| member.attributes[:reflects] }[0].reflects
   end
+
+  def test_it_should_transform_a_type
+    parser = ::CustomElementsManifestParser.parse(@json)
+    tags = parser.find_all_tag_names
+
+    assert tags["light-preview"].members.select { |member| member.attributes[:type] }[0].type.text
+  end
 end
