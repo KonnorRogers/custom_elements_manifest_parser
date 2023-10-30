@@ -3,6 +3,7 @@ require "dry-types"
 module CustomElementsManifestParser
   # Dry types
   module Types
+    # @ignore
     include Dry.Types
 
     # @return [Types::String.enum("private", "protected", "public"]
