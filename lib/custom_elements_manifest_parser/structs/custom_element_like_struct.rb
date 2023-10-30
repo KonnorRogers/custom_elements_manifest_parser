@@ -10,7 +10,7 @@ module CustomElementsManifestParser
 
       # @!attribute customElement
       #   @return [True] - Distinguishes a regular JavaScript class from a custom element class
-      attribute :customElement, Types::Strict::True
+      attribute :customElement, Types::Strict::True.optional.meta(required: false)
 
       # @!attribute tagName
       #   @return [String, nil] -
