@@ -21,3 +21,7 @@ YARD::Rake::YardocTask.new do |t|
 end
 
 task default: :test
+
+require 'yard-junk/rake'
+# rake yard:junk
+YardJunk::Rake.define_task
