@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    custom_elements_manifest_parser (0.2.7)
+    custom_elements_manifest_parser (0.2.8)
       dry-struct (~> 1.0)
       dry-types (~> 1.0)
       dry-validation (~> 1.0)
@@ -10,7 +10,6 @@ GEM
   remote: https://rubygems.org/
   specs:
     backports (3.24.1)
-    command_kit (0.4.0)
     concurrent-ruby (1.2.2)
     dry-configurable (1.1.0)
       dry-core (~> 1.0, < 2)
@@ -64,7 +63,6 @@ PLATFORMS
   arm64-darwin-22
 
 DEPENDENCIES
-  command_kit (~> 0.4.0)
   custom_elements_manifest_parser!
   minitest (~> 5.0)
   rake (~> 13.0)
