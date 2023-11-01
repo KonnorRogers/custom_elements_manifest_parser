@@ -1,5 +1,9 @@
 ## Unreleased
 
+## [0.2.9] - 11/01/2023
+
+- Fixed a bug where `parent_module` was not serializing `exports` or `children`
+
 ## [0.2.3] - 10/08/2023
 
 - Fixed a bug where `ClassLikeStruct` was not getting properly serialized.
