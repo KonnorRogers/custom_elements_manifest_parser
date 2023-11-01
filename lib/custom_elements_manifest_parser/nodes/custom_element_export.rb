@@ -20,6 +20,8 @@ module CustomElementsManifestParser
       #    @return ["custom-element-definition"]
       attribute :kind, Types.Value("custom-element-definition")
 
+      include Mixins::HasParentModule
+
       # @!parse Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 

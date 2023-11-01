@@ -7,6 +7,8 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a function
     class FunctionDeclaration < BaseStruct
+      include Mixins::HasParentModule
+
       # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 

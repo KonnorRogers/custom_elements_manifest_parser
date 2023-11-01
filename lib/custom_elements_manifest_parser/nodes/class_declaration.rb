@@ -11,6 +11,7 @@ module CustomElementsManifestParser
       # @return ["class"]
       def self.kind; 'class'; end
 
+      include Mixins::HasParentModule
 
       # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct

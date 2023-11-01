@@ -48,8 +48,8 @@ module CustomElementsManifestParser
 
       def visit(parser:)
         hash = {}
-        hash[:declarations] = declarations.map { |declaration| parser.visit_node(declaration.merge(parent_module: self)) } unless declarations.nil?
-        hash[:exports] = exports.map { |export| parser.visit_node(export.merge(parent_module: self)) } unless exports.nil?
+        hash[:declarations] = declarations.map { |declaration| parser.visit_node(declaration.merge(_parent_module: self, parser: parser)) } unless declarations.nil?
+        hash[:exports] = exports.map { |export| parser.visit_node(export.merge(_parent_module: self, parser: parser)) } unless exports.nil?
 
         new(hash)
       end

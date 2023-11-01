@@ -27,6 +27,8 @@ module CustomElementsManifestParser
       #    @return [SourceReference, nil]
       attribute :source, Types::Nominal::Any.optional.meta(required: false)
 
+      include Mixins::HasParentModule
+
       # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 

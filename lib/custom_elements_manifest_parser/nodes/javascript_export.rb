@@ -7,6 +7,8 @@ module CustomElementsManifestParser
   module Nodes
     # A JavaScript export!
     class JavaScriptExport < BaseStruct
+      include Mixins::HasParentModule
+
       # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 

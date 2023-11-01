@@ -3,6 +3,7 @@
 require "test_helper"
 require "json"
 # require_relative "../lib/custom_elements_manifest_parser.rb"
+require "custom_elements_manifest_parser"
 
 class CustomElementsManifestParserTest < Minitest::Test
   def setup
@@ -133,5 +134,13 @@ class CustomElementsManifestParserTest < Minitest::Test
     tags = parser.find_all_tag_names
 
     assert tags["light-preview"].members.select { |member| member.attributes[:type] }[0].type.text
+  end
+
+  def test_it_should_transform_exports
+    parser = ::CustomElementsManifestParser.parse(@json)
+    tags = parser.find_all_tag_names
+
+    assert_instance_of ::CustomElementsManifestParser::Nodes::JavaScriptExport, tags["light-preview"].parent_module.exports[0]
+    assert_instance_of ::CustomElementsManifestParser::Nodes::ClassDeclaration, tags["light-preview"].parent_module.declarations[0]
   end
 end

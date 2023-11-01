@@ -82,7 +82,7 @@ module CustomElementsManifestParser
     # end
 
     def visit_node(node)
-      kind = node["kind"] || node[:kind]
+      kind = node[:kind] || node["kind"]
       @visitable_nodes[kind].new(node).visit(parser: self)
     end
 

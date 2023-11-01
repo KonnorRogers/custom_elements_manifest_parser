@@ -8,6 +8,7 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a method attached to a class
     class ClassMethod < BaseStruct
+      include Mixins::HasParentModule
 
       # @!parse Structs::FunctionLikeStruct
       attributes_from Structs::FunctionLikeStruct

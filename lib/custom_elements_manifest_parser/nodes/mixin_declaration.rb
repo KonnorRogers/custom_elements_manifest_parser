@@ -68,7 +68,9 @@ module CustomElementsManifestParser
         attribute attr.name, attr.type
       end
 
-      # @!parse Structs::FunctionLikeStruct
+      include Mixins::HasParentModule
+
+      # @!parse Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 
       # @!attribute kind

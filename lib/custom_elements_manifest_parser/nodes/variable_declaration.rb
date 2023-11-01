@@ -8,6 +8,8 @@ module CustomElementsManifestParser
   module Nodes
     # Documents a variable
     class VariableDeclaration < BaseStruct
+      include Mixins::HasParentModule
+
       # @!parse include Structs::DeclarableNodeStruct
       attributes_from Structs::DeclarableNodeStruct
 

@@ -9,7 +9,9 @@ module CustomElementsManifestParser
       #   @return [JavaScriptModule, nil] -
       #     A convenience helper so you don't need to manually traverse the manifest and always go top -> bottom.
       #     By using this you can grab the "path" and "exports" of a custom element.
-      attribute :parent_module, Types::Nominal::Any.optional.meta(required: false)
+      attribute :_parent_module, Types::Nominal::Any.optional.meta(required: false)
+
+      attribute :parser, Types::Nominal::Any.optional.meta(required: false)
 
       def self.build_hash(parser:, struct:)
         {}
